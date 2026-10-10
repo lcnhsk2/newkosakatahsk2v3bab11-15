@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>REVIEW KOSAKATA HSK2 V3 - by lcnpalembang (08994477998)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
+    background:
+      radial-gradient(circle at 12% 12%, #164e63 0%, transparent 55%),
+      radial-gradient(circle at 88% 88%, #4c1d95 0%, transparent 55%),
+      #0b1020;
+    background-attachment: fixed;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow-x: hidden;
+  }
+
+  .app { width: 100%; max-width: 620px; position: relative; z-index: 2; }
+
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding: 0 6px;
+  }
+  .brand { font-weight: 700; font-size: 1rem; letter-spacing: .5px; opacity: .9; }
+  .pill {
+    font-size: .74rem;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.16);
+    letter-spacing: .4px;
+  }
+
+  .card {
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 24px;
+    padding: 28px;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 20px 60px rgba(0,0,0,.45);
+    animation: pop .35s ease;
+  }
+  @keyframes pop {
+    from { opacity: 0; transform: translateY(14px) scale(.98); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .hidden { display: none !important; }
+  .center { text-align: center; }
+
+  h1 { font-size: 1.5rem; margin-bottom: 8px; }
+  .sub { opacity: .7; font-size: .95rem; margin-bottom: 22px; }
+
+  .rules {
+    list-style: none;
+    text-align: left;
+    display: inline-block;
+    margin-bottom: 28px;
+  }
+  .rules li { padding: 7px 0; font-size: .93rem; opacity: .88; }
+
+  .btn {
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    transition: .2s;
+  }
+  .btn.primary {
+    background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+    color: #fff;
+    padding: 15px 46px;
+    border-radius: 999px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: .4px;
+    box-shadow: 0 10px 30px rgba(139,92,246,.45);
+  }
+  .btn.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 40px rgba(139,92,246,.6);
+  }
+  .btn.primary:active { transform: translateY(0); }
+
+  /* ---------- HUD ---------- */
+  .hud {
+    display: flex;
+    justify-content: space-between;
+    font-size: .82rem;
+    opacity: .82;
+    margin-bottom: 10px;
+    letter-spacing: .3px;
+  }
+  .hud .score b { color: #67e8f9; font-size: 1rem; }
+
+  /* ---------- Timer ---------- */
+  .timer-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .timer-track {
+    flex: 1;
+    height: 8px;
+    background: rgba(255,255,255,.1);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .timer-fill {
+    height: 100%;
+    width: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #34d399, #10b981);
+    transition: width .06s linear, background .3s;
+  }
+  .timer-num {
+    font-size: .82rem;
+    font-weight: 700;
+    opacity: .8;
+    min-width: 34px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .progress-track {
+    height: 5px;
+    background: rgba(255,255,255,.08);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #06b6d4, #8b5cf6);
+    transition: width .35s ease;
+  }
+
+  /* ---------- Question Box (Indonesian) ---------- */
+  .question-box {
+    text-align: center;
+    padding: 26px 18px 28px;
+    margin-bottom: 20px;
+    border-radius: 18px;
+    background: linear-gradient(160deg, rgba(255,255,255,.09), rgba(255,255,255,.02));
+    border: 1px solid rgba(255,255,255,.1);
+    transition: transform .3s ease, box-shadow .3s ease;
+  }
+  .question-box.pulse {
+    animation: qPulse .55s ease;
+  }
+  @keyframes qPulse {
+    0%   { transform: scale(1); box-shadow: 0 0 0 rgba(103,232,249,0); }
+    40%  { transform: scale(1.04); box-shadow: 0 0 34px rgba(103,232,249,.55); }
+    100% { transform: scale(1); box-shadow: 0 0 0 rgba(103,232,249,0); }
+  }
+  .question-label {
+    font-size: .72rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    opacity: .55;
+    margin-bottom: 12px;
+  }
+  .question-text {
+    font-size: 1.35rem;
+    font-weight: 700;
+    line-height: 1.5;
+    color: #fff;
+    text-shadow: 0 2px 12px rgba(103,232,249,.35);
+  }
+  .hint { font-size: .8rem; opacity: .5; margin-top: 12px; letter-spacing: .5px; }
+
+  /* ---------- Options (Hanzi) ---------- */
+  .options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .options .option:last-child:nth-child(odd) {
+    grid-column: 1 / -1;   /* jika jumlah ganjil, tombol terakhir melebar */
+  }
+
+  .option {
+    display: block;
+    width: 100%;
+    padding: 18px 12px;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-indent: 4px;
+    color: #fff;
+    font-family: inherit;
+    background: rgba(255,255,255,.07);
+    border: 2px solid rgba(255,255,255,.13);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: .16s;
+    user-select: none;
+  }
+  .option:hover:not(:disabled) {
+    background: rgba(255,255,255,.15);
+    border-color: rgba(255,255,255,.38);
+    transform: translateY(-3px);
+  }
+  .option:disabled { cursor: default; }
+
+  .option.correct {
+    background: linear-gradient(135deg, #10b981, #059669);
+    border-color: #6ee7b7;
+    box-shadow: 0 0 22px rgba(16,185,129,.55);
+    animation: correctPop .45s ease;
+  }
+  @keyframes correctPop {
+    0%   { transform: scale(1); }
+    45%  { transform: scale(1.06); }
+    100% { transform: scale(1); }
+  }
+  .option.wrong {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    border-color: #fca5a5;
+    box-shadow: 0 0 22px rgba(239,68,68,.55);
+    animation: shake .45s ease;
+  }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20%     { transform: translateX(-8px); }
+    40%     { transform: translateX(8px); }
+    60%     { transform: translateX(-5px); }
+    80%     { transform: translateX(5px); }
+  }
+
+  .feedback {
+    min-height: 24px;
+    text-align: center;
+    margin-top: 16px;
+    font-weight: 700;
+    font-size: .92rem;
+  }
+  .feedback.ok  { color: #6ee7b7; }
+  .feedback.bad { color: #fca5a5; }
+
+  /* =========================================================
+     SUCCESS SCREEN
+     ========================================================= */
+  .success-card {
+    animation: successIn .7s cubic-bezier(.2,.9,.3,1.3);
+  }
+  @keyframes successIn {
+    0%   { opacity: 0; transform: scale(.75) rotate(-3deg); }
+    60%  { opacity: 1; transform: scale(1.04) rotate(1deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0); }
+  }
+
+  .trophy {
+    font-size: 4.4rem;
+    line-height: 1;
+    margin-bottom: 10px;
+    display: inline-block;
+    animation: trophySpin 1.6s ease infinite;
+    filter: drop-shadow(0 6px 22px rgba(250,204,21,.6));
+  }
+  @keyframes trophySpin {
+    0%,100% { transform: rotate(-9deg) scale(1); }
+    50%     { transform: rotate(9deg) scale(1.12); }
+  }
+
+  .success-title {
+    font-size: 1.9rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #fde68a, #67e8f9, #c4b5fd);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+    animation: titleGlow 2s ease infinite;
+  }
+  @keyframes titleGlow {
+    0%,100% { filter: brightness(1); }
+    50%     { filter: brightness(1.35); }
+  }
+
+  .success-sub {
+    font-size: .95rem;
+    opacity: .85;
+    margin-bottom: 8px;
+  }
+  .big-score {
+    font-size: 3.2rem;
+    font-weight: 800;
+    margin: 6px 0 4px;
+    background: linear-gradient(135deg, #67e8f9, #c4b5fd);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .pct { font-size: .95rem; opacity: .75; margin-bottom: 26px; }
+
+  /* ---------- Confetti ---------- */
+  #confettiLayer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 999;
+  }
+  .confetti-piece {
+    position: absolute;
+    top: -20px;
+    width: 10px;
+    height: 16px;
+    opacity: .95;
+    border-radius: 2px;
+    animation: confettiFall linear forwards;
+  }
+  @keyframes confettiFall {
+    0% {
+      transform: translateY(-10vh) rotate(0deg) scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(110vh) rotate(720deg) scale(.7);
+      opacity: 0;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .card { padding: 20px; border-radius: 20px; }
+    .question-text { font-size: 1.1rem; }
+    .option { font-size: 1.25rem; padding: 15px 8px; letter-spacing: 3px; text-indent: 3px; }
+    h1 { font-size: 1.28rem; }
+    .success-title { font-size: 1.5rem; }
+    .big-score { font-size: 2.6rem; }
+    .trophy { font-size: 3.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<div id="confettiLayer"></div>
+
+<div class="app">
+  <div class="topbar">
+    <div class="brand">🀄 REVIEW KOSAKATA HSK2 V3</div>
+    <div class="pill">by lcnpalembang-08994477998</div>
+  </div>
+
+  <!-- ===== START ===== -->
+  <section id="startScreen" class="card center">
+    <h1>REVIEW KOSAKATA HSK2 V3</h1>
+    <p class="sub">by lcnpalembang (08994477998)</p>
+    <p class="sub" id="wordCountSub">60 kosakata · Pilih hanzi yang benar</p>
+    <ul class="rules">
+      <li>📖 Baca arti dalam <b>bahasa Indonesia</b></li>
+      <li>🀄 Pilih <b>6 hanzi</b> yang benar</li>
+      <li>⏱️ Setiap soal punya waktu <b>10 detik</b></li>
+      <li>🔀 Soal &amp; pilihan diacak setiap kali mulai</li>
+      <li>❌ Salah atau waktu habis = <b>ulang dari awal</b></li>
+      <li>🏆 Selesaikan semua untuk melihat perayaan!</li>
+    </ul>
+    <br>
+    <button id="startBtn" class="btn primary">Mulai Latihan</button>
+  </section>
+
+  <!-- ===== QUIZ ===== -->
+  <section id="quizScreen" class="card hidden">
+    <div class="hud">
+      <span id="progress">1 / 1</span>
+      <span class="score">Benar: <b id="score">0</b></span>
+    </div>
+
+    <div class="timer-row">
+      <div class="timer-track"><div class="timer-fill" id="timerFill"></div></div>
+      <div class="timer-num"><span id="timerNum">10</span>s</div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+    <div class="question-box" id="questionBox">
+      <div class="question-label">Apa hanzi dari…</div>
+      <div class="question-text" id="questionText">kepala</div>
+      <div class="hint">Pilih hanzi yang benar</div>
+    </div>
+
+    <div id="options" class="options"></div>
+    <div id="feedback" class="feedback"></div>
+  </section>
+
+  <!-- ===== SUCCESS ===== -->
+  <section id="successScreen" class="card center success-card hidden">
+    <div class="trophy">🏆</div>
+    <h1 class="success-title">Selamat, Selesai! 🎉</h1>
+    <p class="success-sub">Kamu berhasil menyelesaikan semua kosakata!</p>
+    <div class="big-score" id="finalScore">0 / 0</div>
+    <div class="pct" id="finalPct">100% benar</div>
+    <button id="againBtn" class="btn primary">Main Lagi</button>
+  </section>
+</div>
+
+<script>
+/* =========================================================
+   REVIEW KOSAKATA HSK2 V3 — by lcnpalembang (08994477998)
+   Pelajaran 11 - 15
+   ========================================================= */
+const VOCAB = [
+  /* ---------- 第十一课  我最喜欢吃中国菜 ---------- */
+  { h: '头',     m: 'kepala' },
+  { h: '疼',     m: 'sakit / nyeri' },
+  { h: '经常',   m: 'sering' },
+  { h: '动',     m: 'bergerak' },
+  { h: '着',     m: 'partikel (sedang) / menempel' },
+  { h: '路上',   m: 'di jalan' },
+  { h: '慢',     m: 'lambat' },
+  { h: '进',     m: 'masuk' },
+  { h: '药',     m: 'obat' },
+  { h: '身体',   m: 'tubuh / badan' },
+  { h: '时',     m: 'saat / ketika' },
+  { h: '最',     m: 'paling' },
+  { h: '药店',   m: 'apotek / toko obat' },
+
+  /* ---------- 第十二课  这里比北京冷得多 ---------- */
+  { h: '事情',   m: 'hal / urusan' },
+  { h: '晴',     m: 'cerah' },
+  { h: '正',     m: 'sedang / tepat' },
+  { h: '外面',   m: 'di luar' },
+  { h: '阴',     m: 'mendung / gelap' },
+  { h: '从小',   m: 'sejak kecil' },
+  { h: '地铁',   m: 'kereta bawah tanah / MRT' },
+  { h: '楼',     m: 'gedung / lantai' },
+  { h: '站',     m: 'stasiun / berdiri' },
+  { h: '小时候', m: 'waktu kecil' },
+  { h: '好',     m: 'baik' },
+
+  /* ---------- 第十三课  我们爱上中文课 ---------- */
+  { h: '新年',   m: 'tahun baru' },
+  { h: '教',     m: 'mengajar' },
+  { h: '花',     m: 'bunga' },
+  { h: '希望',   m: 'berharap / harapan' },
+  { h: '上面',   m: 'di atas' },
+  { h: '洗手间', m: 'toilet / kamar mandi' },
+  { h: '里面',   m: 'di dalam' },
+  { h: '笔',     m: 'pena / alat tulis' },
+  { h: '可能',   m: 'mungkin' },
+  { h: '上网',   m: 'online / berselancar di internet' },
+  { h: '那样',   m: 'seperti itu' },
+  { h: '告诉',   m: 'memberitahu' },
+  { h: '班',     m: 'kelas' },
+
+  /* ---------- 第十四课  一个人过年多没意思啊 ---------- */
+  { h: '包',     m: 'tas / membungkus' },
+  { h: '过年',   m: 'merayakan tahun baru' },
+  { h: '没意思', m: 'tidak menarik / membosankan' },
+  { h: '位',     m: 'kata satuan untuk orang (sopan) / posisi' },
+  { h: '前面',   m: 'di depan' },
+  { h: '房间',   m: 'kamar' },
+  { h: '小孩儿', m: 'anak kecil' },
+  { h: '女孩儿', m: 'anak perempuan' },
+  { h: '姓',     m: 'marga / nama keluarga' },
+  { h: '眼睛',   m: 'mata' },
+  { h: '跳舞',   m: 'menari' },
+
+  /* ---------- 第十五课  我想再去一次中国 ---------- */
+  { h: '姓名',   m: 'nama lengkap' },
+  { h: '出国',   m: 'pergi ke luar negeri' },
+  { h: '门票',   m: 'tiket masuk' },
+  { h: '高中',   m: 'SMA / sekolah menengah atas' },
+  { h: '出门',   m: 'keluar rumah' },
+  { h: '路',     m: 'jalan' },
+  { h: '颐和园', m: 'Istana Musim Panas (Summer Palace)' },
+  { h: '机场',   m: 'bandara' },
+  { h: '机票',   m: 'tiket pesawat' },
+  { h: '飞',     m: 'terbang' },
+  { h: '好像',   m: 'sepertinya / seperti' },
+  { h: '鸟',     m: 'burung' }
+];
+
+/* =========================================================
+   KONFIGURASI
+   ========================================================= */
+const QUESTION_TIME   = 10;   // detik per soal
+const NUM_OPTIONS     = 6;    // jumlah pilihan jawaban (hanzi)
+const NEXT_DELAY_OK   = 800;  // jeda setelah jawaban benar (ms)
+const NEXT_DELAY_BAD  = 1800; // jeda setelah jawaban salah / waktu habis (ms)
+
+/* =========================================================
+   STATE
+   ========================================================= */
+let deck = [];
+let idx = 0;
+let score = 0;
+let locked = false;
+let timerId = null;
+let endTime = 0;
+let audioCtx = null;
+
+const $ = id => document.getElementById(id);
+
+/* ---------- Utils ---------- */
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* Buat 6 pilihan hanzi: 1 benar + 5 distraktor hanzi */
+function buildOptions(correct, pool) {
+  const distractors = shuffle(
+    pool.filter(w => w.h !== correct.h)
+  ).slice(0, NUM_OPTIONS - 1).map(w => w.h);
+
+  return shuffle([correct.h, ...distractors]);
+}
+
+/* =========================================================
+   AUDIO — Web Audio API (tanpa file eksternal)
+   ========================================================= */
+function ensureAudio() {
+  if (!audioCtx) {
+    try {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    } catch (e) { audioCtx = null; }
+  }
+  if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+  return audioCtx;
+}
+
+function playNote(freq, startTime, duration, type = 'sine', gainVal = 0.18) {
+  if (!audioCtx) return;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, startTime);
+  gain.gain.setValueAtTime(0, startTime);
+  gain.gain.linearRampToValueAtTime(gainVal, startTime + 0.02);
+  gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.start(startTime);
+  osc.stop(startTime + duration + 0.05);
+}
+
+function soundCorrect() {
+  const ctx = ensureAudio();
+  if (!ctx) return;
+  const t = ctx.currentTime;
+  playNote(880, t, 0.12, 'sine', 0.16);
+  playNote(1318.5, t + 0.1, 0.18, 'sine', 0.15);
+}
+
+function soundWrong() {
+  const ctx = ensureAudio();
+  if (!ctx) return;
+  const t = ctx.currentTime;
+  playNote(320, t, 0.18, 'sawtooth', 0.12);
+  playNote(200, t + 0.14, 0.28, 'sawtooth', 0.12);
+}
+
+function soundTimeUp() {
+  const ctx = ensureAudio();
+  if (!ctx) return;
+  const t = ctx.currentTime;
+  playNote(500, t, 0.1, 'square', 0.1);
+  playNote(500, t + 0.14, 0.1, 'square', 0.1);
+  playNote(340, t + 0.28, 0.3, 'square', 0.11);
+}
+
+function soundVictory() {
+  const ctx = ensureAudio();
+  if (!ctx) return;
+  const t = ctx.currentTime;
+  const notes = [
+    [523.25, 0.00, 0.20],
+    [659.25, 0.16, 0.20],
+    [783.99, 0.32, 0.20],
+    [1046.50, 0.48, 0.42],
+    [783.99, 0.80, 0.16],
+    [1046.50, 0.94, 0.55]
+  ];
+  notes.forEach(([f, off, dur], i) => {
+    playNote(f, t + off, dur, 'triangle', 0.2);
+    if (i === notes.length - 1) {
+      playNote(f * 0.5, t + off, dur, 'sine', 0.14);
+      playNote(f * 1.5, t + off, dur, 'sine', 0.08);
+    }
+  });
+}
+
+/* =========================================================
+   CONFETTI
+   ========================================================= */
+const CONFETTI_COLORS = [
+  '#fde68a', '#67e8f9', '#c4b5fd', '#6ee7b7',
+  '#fca5a5', '#fbbf24', '#a5f3fc', '#f0abfc'
+];
+
+function launchConfetti(count = 140) {
+  const layer = $('confettiLayer');
+  layer.innerHTML = '';
+
+  for (let i = 0; i < count; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+
+    const color = CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)];
+    const left  = Math.random() * 100;
+    const delay = Math.random() * 0.9;
+    const dur   = 2.6 + Math.random() * 2.4;
+    const size  = 6 + Math.random() * 8;
+    const isCircle = Math.random() > 0.5;
+
+    piece.style.left = left + 'vw';
+    piece.style.width = size + 'px';
+    piece.style.height = (size * (isCircle ? 1 : 1.6)) + 'px';
+    piece.style.background = color;
+    piece.style.borderRadius = isCircle ? '50%' : '2px';
+    piece.style.animationDelay = delay + 's';
+    piece.style.animationDuration = dur + 's';
+    piece.style.boxShadow = '0 0 8px ' + color;
+
+    layer.appendChild(piece);
+  }
+
+  setTimeout(() => { layer.innerHTML = ''; }, 6000);
+}
+
+/* =========================================================
+   MULAI GAME
+   ========================================================= */
+function startGame() {
+  stopTimer();
+  ensureAudio();
+
+  deck = shuffle(VOCAB);   // acak semua urutan kosakata
+
+  idx = 0;
+  score = 0;
+  locked = false;
+
+  $('score').textContent = '0';
+  $('progressFill').style.width = '0%';
+
+  $('startScreen').classList.add('hidden');
+  $('successScreen').classList.add('hidden');
+  $('quizScreen').classList.remove('hidden');
+  $('confettiLayer').innerHTML = '';
+
+  renderQuestion();
+}
+
+/* =========================================================
+   RENDER SOAL
+   ========================================================= */
+function renderQuestion() {
+  if (idx >= deck.length) { finish(); return; }
+
+  locked = false;
+  const item = deck[idx];
+
+  $('progress').textContent = (idx + 1) + ' / ' + deck.length;
+  $('progressFill').style.width = (idx / deck.length * 100) + '%';
+
+  // PERTANYAAN: arti dalam bahasa Indonesia
+  $('questionText').textContent = item.m;
+
+  const fb = $('feedback');
+  fb.textContent = '';
+  fb.className = 'feedback';
+
+  // PILIHAN: hanzi (acak)
+  const box = $('options');
+  box.innerHTML = '';
+  buildOptions(item, VOCAB).forEach(hanzi => {
+    const b = document.createElement('button');
+    b.className = 'option';
+    b.type = 'button';
+    b.textContent = hanzi;
+    b.addEventListener('click', () => handleAnswer(b, hanzi, item));
+    box.appendChild(b);
+  });
+
+  startTimer();
+}
+
+/* =========================================================
+   JAWAB
+   ========================================================= */
+function handleAnswer(btn, chosen, item) {
+  if (locked) return;
+  locked = true;
+  stopTimer();
+
+  const all = Array.from(document.querySelectorAll('.option'));
+  all.forEach(b => b.disabled = true);
+
+  if (chosen === item.h) {
+    // BENAR
+    btn.classList.add('correct');
+    soundCorrect();
+    score++;
+    $('score').textContent = score;
+    setFeedback('Benar! 🎉', 'ok');
+
+    const qb = $('questionBox');
+    qb.classList.remove('pulse');
+    void qb.offsetWidth;
+    qb.classList.add('pulse');
+
+    setTimeout(() => { idx++; renderQuestion(); }, NEXT_DELAY_OK);
+  } else {
+    // SALAH → ULANG DARI AWAL
+    btn.classList.add('wrong');
+    soundWrong();
+    all.forEach(b => {
+      if (b.textContent === item.h) b.classList.add('correct');
+    });
+    setFeedback('❌ Salah! Jawaban: ' + item.h + ' — permainan diulang...', 'bad');
+    setTimeout(() => startGame(), NEXT_DELAY_BAD);
+  }
+}
+
+/* =========================================================
+   WAKTU HABIS → ULANG DARI AWAL
+   ========================================================= */
+function timeUp() {
+  if (locked) return;
+  locked = true;
+
+  const item = deck[idx];
+  const all = Array.from(document.querySelectorAll('.option'));
+  all.forEach(b => {
+    b.disabled = true;
+    if (b.textContent === item.h) b.classList.add('correct');
+  });
+
+  soundTimeUp();
+  setFeedback('⏰ Waktu habis! Jawaban: ' + item.h + ' — permainan diulang...', 'bad');
+  setTimeout(() => startGame(), NEXT_DELAY_BAD);
+}
+
+/* =========================================================
+   TIMER 10 DETIK
+   ========================================================= */
+function startTimer() {
+  stopTimer();
+  endTime = Date.now() + QUESTION_TIME * 1000;
+  tick();
+  timerId = setInterval(tick, 50);
+}
+
+function stopTimer() {
+  if (timerId) { clearInterval(timerId); timerId = null; }
+}
+
+function tick() {
+  const left = Math.max(0, endTime - Date.now());
+  const pct = left / (QUESTION_TIME * 1000);
+  const fill = $('timerFill');
+
+  fill.style.width = (pct * 100) + '%';
+  fill.style.background = pct > 0.5
+    ? 'linear-gradient(90deg,#34d399,#10b981)'
+    : pct > 0.25
+      ? 'linear-gradient(90deg,#fbbf24,#f59e0b)'
+      : 'linear-gradient(90deg,#f87171,#ef4444)';
+
+  $('timerNum').textContent = Math.ceil(left / 1000);
+
+  if (left <= 0) {
+    stopTimer();
+    timeUp();
+  }
+}
+
+/* =========================================================
+   HELPER
+   ========================================================= */
+function setFeedback(text, cls) {
+  const fb = $('feedback');
+  fb.textContent = text;
+  fb.className = 'feedback ' + cls;
+}
+
+/* =========================================================
+   SELESAI — SUKSES TOTAL
+   ========================================================= */
+function finish() {
+  stopTimer();
+  $('progressFill').style.width = '100%';
+
+  setTimeout(() => {
+    $('quizScreen').classList.add('hidden');
+    $('successScreen').classList.remove('hidden');
+
+    const total = deck.length;
+    const pct = Math.round(score / total * 100);
+    $('finalScore').textContent = score + ' / ' + total;
+    $('finalPct').textContent = pct + '% benar — luar biasa! 🌟';
+
+    launchConfetti(160);
+    soundVictory();
+
+    setTimeout(() => launchConfetti(90), 900);
+  }, 350);
+}
+
+/* ---------- Events ---------- */
+$('startBtn').addEventListener('click', () => {
+  ensureAudio();
+  startGame();
+});
+$('againBtn').addEventListener('click', () => {
+  ensureAudio();
+  startGame();
+});
+
+/* ---------- Update jumlah kosakata otomatis ---------- */
+$('wordCountSub').textContent = VOCAB.length + ' kosakata · Pilih hanzi yang benar';
+</script>
+</body>
+</html>
